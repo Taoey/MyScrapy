@@ -6,6 +6,14 @@
 2.没有错误处理机制
 3.应该加入异常重爬机制
 
+问题汇总：
+
+·问题一：爬取title时可能会出现string分割的情况，因为标签的数据格式是这样的：
+<em>若男佳人中老年女装妈妈装长袖衬衫老年人女装奶奶装衬衣女立领老太太<font class="skcolor_ljg">服装</font>老年女装春秋装上衣 藏蓝 3XL</em>
+
+·问题二：有的store标签下并没有相应的店铺（可能是因为京东自营的关系），所以直接用xpath(.../text())这样的方法并不可取
+
+·问题三：用etree处理string数据时，可能需要获得某个特定标签的内容，我是通过查官网来解决的http://lxml.de/tutorial.html
 
 '''
 import os,time
@@ -32,7 +40,7 @@ def getData(src_code):
     commits = selector.xpath("//*[@id='J_goodsList']/ul//li[@class='gl-item']//div[@class='p-commit']/strong/a/text()")
     stores= selector.xpath("//*[@id='J_goodsList']/ul//li[@class='gl-item']//div[@class='p-shop']")
     titles = selector.xpath(
-        "//*[@id='J_goodsList']/ul//li[@class='gl-item']//div[@class='p-name p-name-type-2']/a/em")
+        "//*[@id='J_goodsList']/ul//li[@class='gl-item']//div[@class='p-name p-name-type-2']/a/em")   #问题一解决
     icons = selector.xpath("//*[@id='J_goodsList']/ul//li[@class='gl-item']//div[@class='p-icons']")
     # print(len(prices),len(commits),len(stores),len(titles),len(icons))
     for i in range(0,len(prices)):
@@ -44,10 +52,10 @@ def getData(src_code):
         if etree.tostring(stores[i]).find(b"span")==-1:
             temp_item.store=""
         else:
-            temp_item.store=stores[i].xpath("string(.)").strip()
+            temp_item.store=stores[i].xpath("string(.)").strip()                      #问题二解决
 
 
-        if etree.tostring(icons[i]).find(b"img")==-1:
+        if etree.tostring(icons[i]).find(b"img")==-1:                                 #问题三解决
             temp_item.self_sell="False"
         else:
             temp_item.self_sell="True"
