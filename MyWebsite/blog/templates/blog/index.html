@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的PythonWeb项目</title>
+    <script src="../../js/jquery.js"></script>
+</head>
+<body>
+
+<form action="" method="post">
+     {% csrf_token %}
+    <input type="text" name="a">
+    <input type="password" name="b">
+    <input type="submit" value="submit"/>
+</form>
+
+
+<form action="/blog/getdata/"  method="post">
+     {% csrf_token %}
+    <input type="text" name="a">
+    <input type="password" name="b">
+    <input type="submit" value="submit" id="sum" onclick="wait()"/>
+</form>
+
+ {% for people  in peoples %}
+<h1>{{people.name}}</h1>
+<h1>{{people.age}}</h1>
+ {% endfor %}
+
+<p id="waitting"></p>
+<p>{{result}}</p>
+
+
+<script>
+    function wait() {
+           document.getElementById("waitting").innerHTML="waitting...";
+    }
+</script>
+</body>
+</html>
