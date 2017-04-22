@@ -3,6 +3,8 @@ from lxml import etree
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from selenium import webdriver
+
 
 url_cz='http://www.weather.com.cn/weather1d/101090701.shtml#around1'
 url_qhd='http://www.weather.com.cn/weather1d/101091101.shtml#input'
@@ -53,7 +55,6 @@ class MyEmail():
         msg['To'] = ",".join(you)
 
         # Create the body of the message (a plain-text and an HTML version).
-        #text = "{} \n {} {} \n{}{} {} ".format(self.today_time,self.today_weather,self.today_T,self.tomorrow_time,self.tomorrow_weather,self.tomorrow_T)
         html = """\
         <html>
           <head></head>
@@ -79,27 +80,74 @@ class MyEmail():
         # Send the message via local SMTP server.
         s = smtplib.SMTP('smtp.163.com')
         s.set_debuglevel(True)
-        s.login('swhwtqwer@163.com', '')    #邮箱的账户 ,密码
+        s.login('swhwtqwer@163.com', '754154954582wy')    #邮箱的账户 ,密码
         # sendmail function takes 3 arguments: sender's address, recipient's address
         # and message to send - here it is sent as one string.
         s.sendmail(me, you, msg.as_string())
         s.quit()
 
 
+    def sendEmail2(self,you,text):
+        s = smtplib.SMTP('smtp.163.com')
+        s.set_debuglevel(True)
+        s.login('swhwtqwer@163.com', '754154954582wy')
+        sub = "Python_Weather"
+        msg = MIMEText(text)
+
+        msg['Subject'] = '%s' % sub
+        msg['From'] = 'swhwtqwer@163.com'
+        msg['To'] = you
+
+        s.send_message(msg)
+        s.quit()
+
+
+    def sendEmail3(self,you,text):
+        # chromedriver = "D:\CCApplication\Mozilla Firefox\firefox.exe"
+        # driver = webdriver.Firefox()
+
+        chromedriver = "D:\CCApplication\phantomjs-2.1.1-windows\bin\phantomjs.exe"
+        driver = webdriver.PhantomJS()
+
+        driver.get("http://mail.163.com/")
+        IframeElement = driver.find_element_by_id("x-URS-iframe")
+        driver.switch_to_frame(IframeElement)
+
+
+        driver.find_element_by_xpath("//form[@id='login-form']/div/div[1]/div[2]/input").send_keys("swhwtqwer")
+        driver.find_element_by_xpath("//form[@id='login-form']/div/div[3]/div[2]/input[2]").send_keys("754154954582qq")
+        driver.find_element_by_xpath("//a[@id='dologin']").click()
+
+        driver.switch_to_default_content()  # 防止出现TypeError: can't access dead object 错误特别重要
+
+
+        web_data = driver.page_source
+        print(web_data)
+
+        driver.find_element_by_id("_mail_component_70_70").click()
+
+
+
 
 if __name__ == '__main__':
+    one_day=60*60*24
+    time.sleep(60*60*9)
+    while True:
+        me='741494582@qq.com'
+        huanyk='2959495325@qq.com'
 
-    me='741494582@qq.com'
-    urls=[url_qhd,url_cz,url_xi_an]       #地点集合
-    address = []                          #收件人
-    text=""
-    e=MyEmail()                           #调用邮箱发送对象
-    for i in  urls:
-        w = Weather()
-        w.get_weather(i)
-        w.print()
-        text+= "{}\n{} \n {} {} \n{} \n{} {}\n\n\n ".format(w.place,w.today_time,w.today_weather,w.today_T,w.tomorrow_time,w.tomorrow_weather,w.tomorrow_T)
+        urls=[url_qhd,url_cz,url_xi_an]       #地点集合
+        address = [me]                          #收件人
+        text=""
+        e=MyEmail()                           #调用邮箱发送对象
+        for i in  urls:
+            w = Weather()
+            w.get_weather(i)
+            w.print()
+            text+= "{}\n{} \n {} {} \n{} \n{} {}\n\n\n ".format(w.place,w.today_time,w.today_weather,w.today_T,w.tomorrow_time,w.tomorrow_weather,w.tomorrow_T)
 
-        time.sleep(2)
-    print(text)
-    e.sendEmail(address,text)
+            time.sleep(2)
+        print(text)
+        e.sendEmail(address,text)
+        e.sendEmail(address[0],text)
+        time.sleep(one_day)
