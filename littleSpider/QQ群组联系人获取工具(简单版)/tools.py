@@ -21,10 +21,10 @@ class MyWeb:
 
     def get_qq_group(self,user, password):
 
-        # chromedriver = "D:\CCApplication\Mozilla Firefox\firefox.exe"
-        # driver = webdriver.Firefox()
-        chromedriver = "D:\CCApplication\phantomjs-2.1.1-windows\bin\phantomjs.exe"
-        driver = webdriver.PhantomJS()
+        chromedriver = "D:\CCApplication\Mozilla Firefox\firefox.exe"
+        driver = webdriver.Firefox()
+        #chromedriver = "D:\CCApplication\phantomjs-2.1.1-windows\bin\phantomjs.exe"
+        #driver = webdriver.PhantomJS()
 
         driver.get("http://qun.qq.com/member.html")
 
@@ -49,19 +49,33 @@ class MyWeb:
         try:
             qq_numbers= selector.xpath("//li[@data-id]/@data-id")  # 获取所有的QQ群组号码和名称
             qq_names= selector.xpath("//li[@data-id]/@title")
+            qq_group=""
             for qq_name, qq_number in zip(qq_names, qq_numbers):
-                print("%-20s  %-13s " % (qq_name, qq_number))
-                print("\n")
+                # print("%-20s  %-13s " % (qq_name, qq_number))
+                # print("\n")
+                qq_group+="%-20s  %-13s " % (qq_name, qq_number)+"\n\n"
+                f = codecs.open("D:\qq_group.txt", "w", "utf-8")
+                f.write(qq_group)
+                f.close()
+            print("数据保存完毕,请打开'D:\qq_group.txt'查看全部数据")
+
         except Exception as e:
+            print(e)
             print("QQ服务器又讨厌咱了,换个qq号或者等下再试吧")
         driver.quit()
 
 
+
+
+
+
+
+
     def get_qq_nums(self,user,password,qq_group):
-        #chromedriver = "D:\CCApplication\Mozilla Firefox\firefox.exe"
-        #driver = webdriver.Firefox()
-        chromedriver = "D:\CCApplication\phantomjs-2.1.1-windows\bin\phantomjs.exe"
-        driver = webdriver.PhantomJS()
+        chromedriver = "D:\CCApplication\Mozilla Firefox\firefox.exe"
+        driver = webdriver.Firefox()
+        #chromedriver = "D:\CCApplication\phantomjs-2.1.1-windows\bin\phantomjs.exe"
+        #driver = webdriver.PhantomJS()
         driver.get("http://qun.qq.com/member.html#gid={}".format(qq_group))
 
         IframeElement = driver.find_element_by_name("login_frame")

@@ -1,8 +1,6 @@
 import getpass
 from tools import MyWeb
 from models import QQ_group
-from pymongo import MongoClient
-
 
 if __name__ == '__main__':
 
