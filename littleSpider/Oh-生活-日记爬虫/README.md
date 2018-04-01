@@ -14,7 +14,9 @@
 ### 下载脚本文件
 [脚本下载](https://github.com/Taoey/MyScrapy/files/1866210/Diary-Spider.zip)，下载脚本后解压得到Diary-Spider.py 文件
 
-- 双击解压好的.py 脚本即可
+### 运行
+双击解压好的.py 脚本即可，（注意headers.txt和Diary-Spider.py）在同一目录下
+
 
 ![登录界面](images/01.png)
 ![获取headers](images/02.png)
