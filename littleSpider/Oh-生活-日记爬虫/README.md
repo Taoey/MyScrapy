@@ -8,5 +8,5 @@
 只需要在浏览器(推荐使用火狐)的登录界面按F12,调出web开发者管理界面，点击“网络”，然后进行登录操作，在“网络”中会有一个“/diary/”的文件，把其中的请求头拷贝到“headers.txt”文件中
 执行程序即可（确保headers.txt 要和脚本文件在同一目录下）
 
-![登录界面](/images/01.png)
-![获取headers](/images/02.png)
+![登录界面](images/01.png)
+![获取headers](images/02.png)
