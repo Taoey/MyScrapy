@@ -83,11 +83,11 @@ def saveDiaryAsJson(id):
 
 
 if __name__ == '__main__':
-    # startDate = input("Please Input Strat Date(Like 2018/3):")
-    # endDate = input("Please Input End Date(Like 2018/4):")
+    startDate = input("Please Input Strat Date(Like 2018/3):")
+    endDate = input("Please Input End Date(Like 2018/4):")
 
-    startDate = '2018/3'
-    endDate = '2018/3'
+    #startDate = '2018/3'
+    #endDate = '2018/3'
 
     print("pleas wait a moment ,loading.......")
     monthList = getMonthList()
