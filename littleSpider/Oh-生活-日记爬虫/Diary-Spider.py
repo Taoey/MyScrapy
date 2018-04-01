@@ -1,5 +1,5 @@
 import requests
-
+import os
 
 def getHeaders():
     '''
@@ -44,30 +44,33 @@ def getMonthList():
         count+=1
     return monthList
 
-def getDiaryIdDics(month):
+def getDiaryIdDics(date):
     '''
     获取每月的日记id号列表
     :param month:
     :return:
     '''
-    url = "https://ohshenghuo.com/api/diary/simple_by_month/2018/3/"
+    url = "https://ohshenghuo.com/api/diary/simple_by_month/{}/".format(date)
     web = requests.get(url=url,headers=getHeaders())
-    diariesJson = web.json()
-    pass
+    diariesJson = web.json()["diaries"]
+    return diariesJson
 
-def saveDiary(date,id):
+def saveDiary(dir,date,id):
     '''
-    保存一条日记到本地，存储方式为.md 文件格式
+    保存一条日记到本地,文件格式应可选(未完成)
     :return:
     '''
     diaryUrl = "https://ohshenghuo.com/api/diary/{}".format(id)
     diaryJson = requests.get(url=diaryUrl,headers=getHeaders()).json()
-    print(diaryJson)
 
-    for i in diariesJson['diaries'].items():
-        # i为一个元组 i[0]为日期，用于本地数据的文件名;i[1]为日记id，用于提取日记内容
-        saveDiary(i[0],i[1])
-        pass
+    weather = diaryJson['diary']['weather']
+    mood = diaryJson['diary']['mood']
+    weekday = diaryJson['diary']['weekday']
+    content = diaryJson['diary']['content']
+    fileName = "%s_%s_%s_%s" % (date,weekday,weather,mood)
+    f = open(dir+os.sep+fileName,"w")
+    f.write(content)
+    f.close()
     pass
 
 def saveDiaryAsJson(id):
@@ -83,8 +86,24 @@ if __name__ == '__main__':
     # startDate = input("Please Input Strat Date(Like 2018/3):")
     # endDate = input("Please Input End Date(Like 2018/4):")
 
-    getMonthList()
-    pass
+    startDate = '2018/3'
+    endDate = '2018/3'
+
+    print("pleas wait a moment ,loading.......")
+    monthList = getMonthList()
+    diarys = {}
+    #合并字典
+    for date in monthList:
+        diarys = dict(diarys,**getDiaryIdDics(date))
+    #建立文件夹
+    dir = 'diarys'
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+
+    for date in diarys.items():
+        print("saving %s ..." % (date[0]))
+        saveDiary(dir,date[0],date[1])
+        print('%s done' %(date[0]))
 
 
 
