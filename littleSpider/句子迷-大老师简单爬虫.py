@@ -2,7 +2,7 @@ from selenium import webdriver
 from lxml import etree
 
 urls=["http://www.juzimi.com/writer/29766?page={}".format(i) for i in range(23)]
-driver = webdriver.PhantomJS()
+driver = webdriver.Firefox()
 
 COUNT=0
 
